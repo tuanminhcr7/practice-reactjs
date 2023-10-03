@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { fetchAllUser } from '../services/UserService';
+import ReactPaginate from 'react-paginate';
 
 const TableUsers = (props) => {
 
     const [listUser, setListUser] = useState([]);
+    const [total, setTotal] = useState(0);
 
     const getUsers = async () => {
         let res = await fetchAllUser();
         if (res && res?.data) {
             setListUser(res?.data);
         }
+    }
+
+    const handlePageClick = () => {
+
     }
 
     useEffect(() => {
@@ -44,6 +50,28 @@ const TableUsers = (props) => {
 
                 </tbody>
             </Table>
+
+            <ReactPaginate
+                breakLabel="..."
+                nextLabel="next >"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={5}
+                pageCount={69}
+                previousLabel="< previous"
+                renderOnZeroPageCount={null}
+
+                // class css paginate
+                pageClassName="page-item"
+                pageLinkClassName="page-link"
+                previousClassName="page-item"
+                previousLinkClassName="page-link"
+                nextClassName="page-item"
+                nextLinkClassName="page-link"
+                breakClassName="page-item"
+                breakLinkClassName="page-link"
+                containerClassName="pagination"
+                activeClassName="active"
+            />
         </>
     );
 };
