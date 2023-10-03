@@ -2,8 +2,8 @@ import React from 'react';
 
 import axios from './customize-axios'
 
-const fetchAllUser = () => {
-    return axios.get("/api/users");
+const fetchAllUser = (page) => {
+    return axios.get(`/api/users?page=${page}`);
 };
 
 export { fetchAllUser };
