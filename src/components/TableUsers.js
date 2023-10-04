@@ -2,17 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { fetchAllUser } from '../services/UserService';
 import ReactPaginate from 'react-paginate';
+import ModalAddNew from './ModalAddNew';
 
 const TableUsers = (props) => {
 
-    const [listUser, setListUser] = useState([]);
+    const [listUsers, setListUsers] = useState([]);
     const [totalUsers, setTotalUsers] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
+    const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
+
+    const handleClose = () => {
+        setIsShowModalAddNew(false);
+    }
+
+    const handleUpdateTable = (user) => {
+        setListUsers([user, ...listUsers]);
+    }
 
     const getUsers = async (page) => {
         let res = await fetchAllUser(page);
         if (res && res?.data) {
-            setListUser(res?.data);
+            setListUsers(res?.data);
             setTotalUsers(res?.total);
             setTotalPages(res?.total_pages);
         }
@@ -29,6 +39,15 @@ const TableUsers = (props) => {
 
     return (
         <>
+            <div className='my-3 add-new'>
+                <span>List Users:</span>
+                <button
+                    onClick={() => setIsShowModalAddNew(true)}
+                    className='btn btn-success'
+                >
+                    Add new user
+                </button>
+            </div>
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -39,8 +58,8 @@ const TableUsers = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {listUser && listUser.length > 0 &&
-                        listUser.map((item, index) => {
+                    {listUsers && listUsers.length > 0 &&
+                        listUsers.map((item, index) => {
                             return (
                                 <tr key={`users-${index}`}>
                                     <td>{item?.id}</td>
@@ -75,6 +94,12 @@ const TableUsers = (props) => {
                 breakLinkClassName="page-link"
                 containerClassName="pagination"
                 activeClassName="active"
+            />
+
+            <ModalAddNew
+                show={isShowModalAddNew}
+                handleClose={handleClose}
+                handleUpdateTable={handleUpdateTable}
             />
         </>
     );
